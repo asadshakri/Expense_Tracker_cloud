@@ -86,6 +86,7 @@ function add(expenseDetails){
     .then(response => {
       //  allExpenses.push(response.data)
        // display(response.data);
+       alert("Added successfully!")
     })
     .catch(err => console.error(err));
 }
