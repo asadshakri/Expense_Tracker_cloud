@@ -84,9 +84,8 @@ function add(expenseDetails){
     const token=localStorage.getItem("token");
     axios.post(`${backend_url}/expense/add`, expenseDetails,{headers:{ "Authorization": token }})
     .then(response => {
-      //  allExpenses.push(response.data)
-       // display(response.data);
        alert("Added successfully!")
+       console.log(response.data);
     })
     .catch(err => console.error(err));
 }
@@ -215,6 +214,8 @@ function showExpense(page=localStorage.getItem("currentPage")||1){
     expense.style.display="block";
     const Leaderboard=document.getElementById("showLeaderboard");
     Leaderboard.style.display="none";
+    const downloadedFiles=document.getElementById("downloadedFiles");
+    downloadedFiles.style.display="none";
     localStorage.setItem("displayPage","showExpense");
 }
 
