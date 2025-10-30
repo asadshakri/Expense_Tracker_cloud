@@ -145,7 +145,7 @@ function deleteData(id, row) {
 
 function buyPremium() {
     const token = localStorage.getItem("token");
-    const popup = window.open(`${backend_url}/paymentPage`, "payment");
+    const popup = window.open(`${backend_url}:7000/paymentPage`, "payment");
   
     // Listen for "ready" signal from payment page
     window.addEventListener("message", (event) => {
