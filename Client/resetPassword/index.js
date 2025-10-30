@@ -1,4 +1,4 @@
-const backend_url="http://15.206.210.208";
+const backend_url="http://13.127.54.39";
 
 function resetLink(event)
 {
