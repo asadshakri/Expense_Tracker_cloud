@@ -37,7 +37,6 @@ function initialize() {
     const downloadedFiles=document.getElementById("downloadedFiles");
     downloadedFiles.style.display="none";
     
-    if(!localStorage.getItem("displayPage"))
       localStorage.setItem("displayPage","expenseForm");
     document.getElementById(localStorage.getItem("displayPage")).style.display="block";
 
@@ -164,7 +163,6 @@ function addExpense(){
     Leaderboard.style.display="none";
     const downloadedFiles=document.getElementById("downloadedFiles");
     downloadedFiles.style.display="none";
-    localStorage.setItem("displayPage","expenseForm");
 }
 
 
@@ -216,7 +214,6 @@ function showExpense(page=localStorage.getItem("currentPage")||1){
     Leaderboard.style.display="none";
     const downloadedFiles=document.getElementById("downloadedFiles");
     downloadedFiles.style.display="none";
-    localStorage.setItem("displayPage","showExpense");
 }
 
 
@@ -328,7 +325,7 @@ function showLeaderboard(){
     Leaderboard.style.display="block";
     const downloadedFiles=document.getElementById("downloadedFiles");
     downloadedFiles.style.display="none";
-    localStorage.setItem("displayPage","showLeaderboard");
+
 
 }
 
@@ -479,7 +476,6 @@ function downloadedFiles()
     Leaderboard.style.display="none";
     const downloadedFiles=document.getElementById("downloadedFiles");
     downloadedFiles.style.display="block";
-    localStorage.setItem("displayPage","downloadedFiles");
 
 }
 
