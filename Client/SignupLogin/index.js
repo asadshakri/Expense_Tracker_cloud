@@ -1,4 +1,4 @@
-const backend_url="http://13.127.54.39";
+const backend_url="http://13.232.96.190";
 
 function showLogin() {
     document.getElementById("signupForm").style.display = "none";

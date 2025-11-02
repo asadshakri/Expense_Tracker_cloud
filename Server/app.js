@@ -33,10 +33,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "../Client")));
 app.use(express.static('public'));
-app.use(express.static("reports"));
+//app.use(express.static("reports"));
 
 
-app.use("/reports", express.static("reports"));
+//app.use("/reports", express.static("reports"));
 
 app.use(morgan('combined',{stream:accesslogStream}));
 
