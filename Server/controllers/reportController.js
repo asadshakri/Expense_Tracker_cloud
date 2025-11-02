@@ -24,37 +24,26 @@ const reportGenerate = async (req, res) => {
 
  
     const now = new Date();
+
     const filterByRange = (expenses, start, end) =>
       expenses.filter((e) => {
         const d = new Date(e.createdAt);
         return d >= start && d < end;
       });
-
-  
-    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const endOfDay = new Date(startOfDay);
-    endOfDay.setDate(startOfDay.getDate() + 1);
-    const dailyExpenses = filterByRange(allExpenses, startOfDay, endOfDay);
-
     
-    const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay()); 
-    //startOfWeek.setHours(0, 0, 0, 0);
-    const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 7);
-    const weeklyExpenses = filterByRange(allExpenses, startOfWeek, endOfWeek);
-
+ 
+    const dates = allExpenses.map(e => new Date(e.createdAt));
+    const minDate = new Date(Math.min(...dates));
+    const maxDate = new Date(Math.max(...dates));
+ 
+    minDate.setHours(0,0,0,0);
+    maxDate.setHours(0,0,0,0);
     
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-    const monthlyExpenses = filterByRange(allExpenses, startOfMonth, endOfMonth);
-
-    // Build CSV
+   
     let csvData = "";
-
     const writeSection = (title, data) => {
       csvData += `=== ${title} ===\n`;
-      csvData += "Date,Description,Category,Amount\n";
+      csvData += "Date,Description,Category,Amount,Income\n";
       if (data.length === 0) {
         csvData += "No records found\n\n";
         return;
@@ -65,11 +54,41 @@ const reportGenerate = async (req, res) => {
       });
       csvData += "\n\n";
     };
+    
 
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const endOfDay = new Date(startOfDay);
+    endOfDay.setDate(startOfDay.getDate() + 1);
+    const dailyExpenses = filterByRange(allExpenses, startOfDay, endOfDay);
     writeSection("DAILY EXPENSES", dailyExpenses);
-    writeSection("WEEKLY EXPENSES", weeklyExpenses);
-    writeSection("MONTHLY EXPENSES", monthlyExpenses);
-
+    
+   
+    let weekStart = new Date(minDate);
+    weekStart.setDate(weekStart.getDate() - weekStart.getDay()); 
+    while (weekStart < maxDate) {
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 7);
+    
+      const weeklyExpenses = filterByRange(allExpenses, weekStart, weekEnd);
+      const title = `WEEKLY EXPENSES (${weekStart.toDateString()} - ${new Date(weekEnd - 1).toDateString()})`;
+      writeSection(title, weeklyExpenses);
+    
+      weekStart = weekEnd;
+    }
+    
+  
+    let monthStart = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+    while (monthStart <= maxDate) {
+      const monthEnd = new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 1);
+    
+      const monthlyExpenses = filterByRange(allExpenses, monthStart, monthEnd);
+      const monthName = monthStart.toLocaleString("default", { month: "long", year: "numeric" });
+      const title = `MONTHLY EXPENSES (${monthName})`;
+      writeSection(title, monthlyExpenses);
+    
+      monthStart = monthEnd;
+    }
+    
     const filename = `expense_report_${userId}_${Date.now()}.csv`;
 
     // Upload to S3
